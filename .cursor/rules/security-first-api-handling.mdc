@@ -1,0 +1,4 @@
+---
+description: Ensures all API routes validate input, catch exceptions, and never leak stack traces or secrets. Useful for endpoints handling wallets, balances, and AI queries.
+alwaysApply: false
+---

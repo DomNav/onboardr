@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+
+Prevents the AI assistant from giving swap recommendations, financial advice, or token price speculation. Keeps responses safe, ethical, and hackathon-compliant
+---

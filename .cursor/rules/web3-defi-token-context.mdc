@@ -1,0 +1,9 @@
+---
+description: Standardize token metadata and state logic for Soroswap and Defindex assets.
+alwaysApply: false
+---
+- Use a central `tokens.ts` or `tokenRegistry.ts` for mapping token symbols, addresses, decimals
+- Include Soroswap, Defindex, and native Stellar assets with identifiers
+- Use `useTokenData()` hook to retrieve balance, allowance, and USD price
+- Display symbols with icons via an asset-icon registry (fallback to initials)
+- Update token metadata periodically if using off-chain sources

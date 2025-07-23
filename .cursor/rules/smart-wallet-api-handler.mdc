@@ -1,0 +1,11 @@
+---
+description: Scaffold secure, composable backend API handlers for wallet interactions (balance, tx, auth).
+alwaysApply: false
+---
+- All endpoints must validate inputs using Zod or equivalent schema
+- Use environment variables for private keys or signing secrets
+- Avoid hardcoding contract addresses — use a config module
+- Group endpoints under `/api/wallets/` with clear REST semantics
+- Log all signing requests with metadata, but exclude PII
+- Return human-readable and machine-readable responses
+- Use retry and timeout wrappers around contract calls

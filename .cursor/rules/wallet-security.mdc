@@ -1,0 +1,10 @@
+---
+alwaysApply: true
+Description: Applies strict wallet security patterns including user protection, signer isolation, and UI confirmations.
+---
+
+ Never expose signer or private key details to the frontend
+- Require user confirmation (via modal) before any signing operation
+- Display full transaction summary before submission
+- Integrate fraud detection for abnormal token transfers or approvals
+- Use rate limiting for backend signing routes

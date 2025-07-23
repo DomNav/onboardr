@@ -1,0 +1,4 @@
+---
+description: Enforces UX best practice of showing no more than 5 key UI elements per screen. Useful when designing dashboards, tour steps, or vault overviews.
+alwaysApply: false
+---

@@ -1,0 +1,11 @@
+---
+description: Enforces best practices for building modular, secure, and composable smart wallet UI components.
+- Prefer component composition and separation of concerns
+- Use Tailwind and shadcn/ui for consistent styling
+- Wallet UI components must include props for connection state, user address, and error fallback
+- Always abstract wallet providers into a shared context (e.g., useWallet.ts)
+- Use optimistic UI for balance + transaction status updates
+- Ensure all user inputs are validated before calling any signer methods
+
+alwaysApply: false
+---

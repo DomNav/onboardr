@@ -1,0 +1,4 @@
+---
+description: All chart components (Recharts, Chart.js) must validate input before rendering. Prevents crashes from undefined/null data or missing series.
+alwaysApply: false
+---

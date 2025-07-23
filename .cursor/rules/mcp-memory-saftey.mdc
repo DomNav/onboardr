@@ -1,0 +1,4 @@
+---
+description: Ensures MCP memory writes are always scoped to the active wallet and cleared on logout. Prevents cross-user data leakage in persistent chat sessions.
+alwaysApply: false
+---

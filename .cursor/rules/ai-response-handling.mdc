@@ -1,0 +1,4 @@
+---
+description: Applies best practices for LLM responses, including loading states, streaming outputs, and graceful fallbacks on error. Great for /api/ask, portfolio summaries, and vault explainers.
+alwaysApply: false
+---

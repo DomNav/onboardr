@@ -1,0 +1,4 @@
+---
+description: Ensures wallet keypair generation only happens via trusted providers like Freighter. Warns against exposing private keys on client-side in production.
+alwaysApply: false
+---

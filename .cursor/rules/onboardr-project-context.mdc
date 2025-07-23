@@ -1,0 +1,44 @@
+---
+alwaysApply: true
+
+You are contributing to a project called **Onboardr** — a real-time Web3 DeFi analytics dashboard inspired by traditional stock market UIs. Its purpose is to help users track DeFi protocols and opportunities with a familiar, intuitive experience.
+
+🧠 **Why We’re Building This:**
+- Most DeFi dashboards are too complex or intimidating for non-crypto-native users.
+- We're making it easier to **onboard traditional investors** into Web3 by mirroring clean, familiar financial dashboards.
+- It also acts as a visual wrapper to eventually integrate **smart wallet tooling**, **automation flows**, and **real DeFi API data**.
+
+🎯 **Core Goals:**
+1. Display real-time data from protocols like Soroswap and Defindex
+2. Replace stocks (AAPL/MSFT) with token pools (e.g. SORO/USDC, DFX/USDT)
+3. Show metrics like:
+   - Total Value Locked (TVL)
+   - APR / APY
+   - 24h Volume
+   - Token price charts
+   - Pool performance over time
+4. Add contextual insights using AI agents later
+5. Prioritize **security**, **auditing**, and **clean code** for production readiness
+
+🧱 **Current Stack:**
+- React + TypeScript + Vite
+- Tailwind CSS + Radix UI
+- Recharts (for data visualization)
+- Mock APIs with intent to plug into live data from:
+   - The Graph
+   - Defindex API
+   - Soroswap subgraph
+- Zod + React Hook Form
+- Cursor (for AI-driven code generation and refactoring)
+
+🔐 **Security Goals:**
+- Maintain strong type safety and predictable state
+- Use security-first API patterns
+- Plan for future integration with wallet providers and permissioned endpoints
+
+💡 **Vision:**
+This project is both a frontend showcase and a launchpad for smart agents that:
+- Suggest DeFi strategies
+- Summarize performance
+- Automate pool interactions
+---

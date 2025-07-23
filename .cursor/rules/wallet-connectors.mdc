@@ -1,0 +1,9 @@
+---
+description: Provides a consistent architecture for plugging in wallet connectors (Freighter, Albedo, etc).
+alwaysApply: false
+---
+- Encapsulate each wallet type as a connector module (e.g., freighter.ts)
+- Expose unified `connect()`, `disconnect()`, `getAccount()`, `signTx()` API
+- Maintain connector state using Zustand or React Context
+- Fallback to guest view when no wallet is connected
+- Emit events for wallet status changes (connected/disconnected/network)
