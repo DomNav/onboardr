@@ -25,10 +25,18 @@ node_modules/
 
 # dotenv environment variables file
 .env
+.env.local
 
 # Production build
 dist/
 build/
+
+# Rust/Cargo
+contracts/*/target/
+Cargo.lock
+
+# Claude settings
+.claude/
 
 # Editor directories and files
 .vscode/*
