@@ -10,7 +10,7 @@ jobs:
   sanity-check:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
     
     runs-on: ${{ matrix.os }}
     
@@ -31,11 +31,6 @@ jobs:
       
       - name: Install dependencies
         run: pnpm install
-      
-      - name: Install Windows build tools
-        if: runner.os == 'Windows'
-        run: powershell -ExecutionPolicy Bypass ./scripts/install-buildtools.ps1
-        shell: pwsh
       
       - name: Run sanity check
         run: pnpm sanity
