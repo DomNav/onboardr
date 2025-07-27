@@ -2,7 +2,7 @@ name: DeFindex smoke-test
 
 on:
   push:
-    branches: [ main, hackathon ]
+    branches: [ main, hackathon, master ]
   pull_request:
 
 jobs:
