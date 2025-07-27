@@ -1,0 +1,36 @@
+name: DeFindex smoke-test
+
+on:
+  push:
+    branches: [ main, hackathon ]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Prepare .env
+        run: |
+          echo "DEFINDEX_VAULT_ID=${{ secrets.DEFINDEX_VAULT_ID }}"         >> backend/.env
+          echo "SOROSWAP_API_KEY=${{ secrets.SOROSWAP_API_KEY }}"           >> backend/.env
+          echo "SOROSWAP_BASE=https://soroswap-api-staging-436722401508.us-central1.run.app" >> backend/.env
+          echo "DEFINDEX_NETWORK=testnet"                                   >> backend/.env
+
+      - name: Run smoke-test
+        run: pnpm run test:defindex 
