@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   BarChart, BarChart3, Wallet, Globe, 
-  DollarSign, Settings, ChevronRight, ChevronLeft, Home
+  DollarSign, Settings, ChevronRight, ChevronLeft, Home, TrendingUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,11 @@ export function Sidebar({ isCollapsed, onToggle, className }: SidebarProps) {
       title: 'Currencies',
       icon: DollarSign,
       href: '/currencies',
+    },
+    {
+      title: 'Earn',
+      icon: TrendingUp,
+      href: '/earn',
     },
     {
       title: 'Global',

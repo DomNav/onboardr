@@ -6,6 +6,7 @@ import { router as soroswapRouter } from './routes/soroswap';
 import { router as walletRouter } from './routes/wallet';
 import { router as tradeRouter } from './routes/trade';
 import { router as agentsRouter } from './routes/agents';
+import { router as defindexRouter } from './routes/defindex';
 
 // Load environment variables from root directory
 dotenv.config({ path: path.join(__dirname, '..', '..', '.env.local') });
@@ -44,6 +45,7 @@ app.use('/api/soroswap', soroswapRouter);
 app.use('/api/wallet', walletRouter);
 app.use('/api/trade', tradeRouter);
 app.use('/api/agents', agentsRouter);
+app.use('/api/vaults', defindexRouter);
 
 // 404 handler
 app.use('*', (req: Request, res: Response) => {
@@ -71,6 +73,7 @@ app.listen(PORT, () => {
   console.log(`💰 Wallet API: http://localhost:${PORT}/api/wallet`);
   console.log(`🔄 Trade API: http://localhost:${PORT}/api/trade`);
   console.log(`🤖 Agents API: http://localhost:${PORT}/api/agents`);
+  console.log(`🏦 DeFindex Vaults: http://localhost:${PORT}/api/vaults`);
   
   // Validate required environment variables
   if (!process.env.DUNE_API_KEY) {

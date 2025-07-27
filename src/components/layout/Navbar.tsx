@@ -25,6 +25,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
+import ConnectWalletButton from '../wallet/ConnectWalletButton';
 
 interface NavbarProps {
   className?: string;
@@ -162,6 +163,7 @@ export function Navbar({ className }: NavbarProps) {
           </Button>
           
           <div className="flex items-center gap-3">
+            <ConnectWalletButton />
             <AnimatedThemeToggle />
             
             {/* Notifications Dropdown */}

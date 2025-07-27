@@ -16,6 +16,7 @@ import Global from "./pages/Global";
 import Portfolio from "./pages/Portfolio";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
+import Earn from "./pages/Earn";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/earn" element={<Earn />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
