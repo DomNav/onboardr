@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:defindex": "node scripts/vault-test-simulation.js",
+    "test:defindex": "node --loader ts-node/esm scripts/vault-deposit-withdraw.ts",
     "sanity": "echo 'Sanity check passed ✔️'"
   },
   "dependencies": {
