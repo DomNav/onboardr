@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import parseCommand from '@/lib/parseCommand';
 import { getQuote } from '@/lib/quote';
+import { fetchPoolApy } from '@/lib/defindex';
 
 interface Msg { 
   role: 'user' | 'ai'; 
@@ -32,6 +33,14 @@ export default function SoroChatPanel() {
         role: 'ai',
         text: `Slash commands:\n• /trade <amt> <SELL>→<BUY>\n• /metrics [asset]\n• /help`,
       });
+    }
+
+    // --- Local handling for /metrics command ---
+    if (cmd === 'metrics') {
+      push({ role: 'ai', text: '⏳ Fetching metrics…' });
+      const rows = await fetchPoolApy(args || 'XLM');
+      const text = rows.map(r => `• ${r.name}: ${r.apy}% APY, ${r.tvl.toLocaleString()} TVL`).join('\n');
+      return push({ role: 'ai', text: text || 'No data.' });
     }
 
     // --- Local handling for /trade preview ---
