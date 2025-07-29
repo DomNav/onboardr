@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 // Soroswap component stubs - to be replaced with actual components
 export function SwapComponent() {
@@ -40,9 +41,9 @@ export function Balances() {
     try {
       if (walletState.isConnected) {
         setWalletState({ publicKey: null, isConnected: false });
-        alert('Wallet disconnected');
+        toast.success('Wallet disconnected');
       } else {
-        // Import Freighter API dynamically
+        // Import Freighter API 
         const { isConnected, requestAccess } = await import('@stellar/freighter-api');
         
         const [connected, { address }] = await Promise.all([
@@ -52,14 +53,14 @@ export function Balances() {
         
         if (connected && address) {
           setWalletState({ publicKey: address, isConnected: true });
-          alert('Wallet connected successfully!');
+          toast.success('Wallet connected successfully!');
         } else {
           throw new Error('Freighter not connected');
         }
       }
     } catch (error) {
       console.error('Wallet connection error:', error);
-      alert(error instanceof Error ? error.message : 'Failed to connect Freighter');
+      toast.error(error instanceof Error ? error.message : 'Failed to connect Freighter');
     }
   };
 
