@@ -1,5 +1,5 @@
-export default async function Page() {
-  // @ts-expect-error - Soroswap component imports will be fixed later
-  const { SwapComponent } = await import('@/lib/soroswap');
+import { SwapComponent } from '@/lib/soroswap';
+
+export default function Page() {
   return <SwapComponent />;
 }
