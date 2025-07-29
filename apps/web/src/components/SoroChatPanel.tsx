@@ -39,7 +39,7 @@ export default function SoroChatPanel() {
     if (cmd === 'metrics') {
       push({ role: 'ai', text: '⏳ Fetching metrics…' });
       const rows = await fetchPoolApy(args || 'XLM');
-      const text = rows.map(r => `• ${r.name}: ${r.apy}% APY, ${r.tvl.toLocaleString()} TVL`).join('\n');
+      const text = rows.map((r: any) => `• ${r.name}: ${r.apy}% APY, ${r.tvl.toLocaleString()} TVL`).join('\n');
       return push({ role: 'ai', text: text || 'No data.' });
     }
 

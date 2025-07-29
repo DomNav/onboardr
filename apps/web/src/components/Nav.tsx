@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
 
 const tabs = [
   { href: '/balance', label: 'Balance' },
@@ -10,6 +11,8 @@ const tabs = [
 ];
 
 export default function Nav() {
+  const { theme, setTheme } = useTheme();
+  
   return (
     <nav className="flex gap-4 px-6 py-4 bg-gradient-to-r from-purple-600 to-indigo-700 text-white">
       {tabs.map(t => (
@@ -21,6 +24,12 @@ export default function Nav() {
           {t.label}
         </Link>
       ))}
+      <button 
+        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+        className="ml-auto px-2 py-1 hover:bg-white/10 rounded transition-colors"
+      >
+        {theme === 'dark' ? '☀️' : '🌙'}
+      </button>
     </nav>
   );
 }
