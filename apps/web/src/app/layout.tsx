@@ -1,22 +1,15 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
+import Nav from '@/components/Nav';
+import '@/app/globals.css';
 
-const inter = Inter({ subsets: ['latin'] })
+export const metadata = { title: 'Onboardr • Soro', description: 'AI-powered Soroswap dashboard' };
 
-export const metadata: Metadata = {
-  title: 'Onboardr Web App',
-  description: 'Modern DeFi application with Next.js',
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className="bg-zinc-950 text-zinc-100">
+        <Nav />
+        <main className="p-6">{children}</main>
+      </body>
     </html>
-  )
+  );
 }
