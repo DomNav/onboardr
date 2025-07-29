@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react';
 
 export default function SoroChatPanel() {
-  const [messages, setMessages] = useState<string[]>(['Hi, I'm Soro! Ask me for a trade.']);
+  const [messages, setMessages] = useState<string[]>(['Hi, I am Soro! Ask me for a trade.']);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const send = () => {
@@ -18,7 +18,7 @@ export default function SoroChatPanel() {
         {messages.map((m, i) => <p key={i} className="bg-zinc-800 p-2 rounded">{m}</p>)}
       </div>
       <div className="flex gap-2">
-        <input ref={inputRef} className="flex-1 bg-zinc-900 p-2 rounded" placeholder="Type /trade 50 XLM→USDC" />
+        <input ref={inputRef} className="flex-1 bg-zinc-900 p-2 rounded" placeholder="Type /trade 50 XLM to USDC" />
         <button onClick={send} className="px-4 py-2 bg-purple-600 rounded">Send</button>
       </div>
     </section>
