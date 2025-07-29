@@ -8,6 +8,7 @@ import { Badge } from '../components/ui/badge';
 import { Separator } from '../components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { useChatContext } from '../contexts/ChatContext';
+import { useFreighter } from '../hooks/useFreighter';
 import { 
   Wallet, 
   Copy, 
@@ -22,17 +23,6 @@ import {
   TrendingUp,
   User
 } from 'lucide-react';
-
-// Mock wallet data - in real app this would come from wallet connection
-const mockWalletData = {
-  address: 'GCKFBEIYTKP...XLVHS7JH2TQBLVYF',
-  fullAddress: 'GCKFBEIYTKP5RQWWVFIAV62XLVHS7JH2TQBLVYF',
-  balance: '1,247.83',
-  currency: 'XLM',
-  network: 'Stellar Mainnet',
-  connected: true,
-  provider: 'Freighter'
-};
 
 // Mock profile data that would be stored in MCP memory
 const defaultProfile = {
@@ -51,6 +41,7 @@ const defaultProfile = {
 
 const Profile = () => {
   const { memory, updateMemory } = useChatContext();
+  const { publicKey, isConnected } = useFreighter();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState(defaultProfile);
   const [tempProfile, setTempProfile] = useState(defaultProfile);
@@ -80,9 +71,14 @@ const Profile = () => {
   };
 
   const copyAddress = () => {
-    navigator.clipboard.writeText(mockWalletData.fullAddress);
-    // You could add a toast notification here
+    if (publicKey) {
+      navigator.clipboard.writeText(publicKey);
+      // You could add a toast notification here
+    }
   };
+
+  // Truncate address for display
+  const truncateAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
   const handleTokenToggle = (token: string) => {
     const updatedTokens = tempProfile.favoriteTokens.includes(token)
@@ -292,10 +288,10 @@ const Profile = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <Badge variant={mockWalletData.connected ? "default" : "destructive"}>
-                  {mockWalletData.connected ? "Connected" : "Disconnected"}
+                <Badge variant={isConnected ? "default" : "destructive"}>
+                  {isConnected ? "Connected" : "Disconnected"}
                 </Badge>
-                <Badge variant="outline">{mockWalletData.provider}</Badge>
+                <Badge variant="outline">Freighter</Badge>
               </div>
               
               <div className="space-y-2">
@@ -303,33 +299,40 @@ const Profile = () => {
                   <Label className="text-xs text-muted-foreground">Address</Label>
                   <div className="flex items-center gap-2">
                     <code className="text-xs bg-muted px-2 py-1 rounded">
-                      {mockWalletData.address}
+                      {isConnected && publicKey ? truncateAddress(publicKey) : 'No wallet connected'}
                     </code>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={copyAddress}
-                    >
-                      <Copy className="h-3 w-3" />
-                    </Button>
+                    {isConnected && publicKey && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={copyAddress}
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    )}
                   </div>
                 </div>
                 
                 <div>
                   <Label className="text-xs text-muted-foreground">Balance</Label>
                   <p className="text-lg font-semibold">
-                    {mockWalletData.balance} {mockWalletData.currency}
+                    {isConnected ? '1,247.83 XLM' : 'Connect wallet to view balance'}
                   </p>
                 </div>
                 
                 <div>
                   <Label className="text-xs text-muted-foreground">Network</Label>
-                  <p className="text-sm">{mockWalletData.network}</p>
+                  <p className="text-sm">{isConnected ? 'Stellar Mainnet' : 'Not connected'}</p>
                 </div>
               </div>
 
-              <Button variant="outline" className="w-full" size="sm">
+              <Button 
+                variant="outline" 
+                className="w-full" 
+                size="sm"
+                disabled={!isConnected || !publicKey}
+              >
                 <ExternalLink className="h-4 w-4 mr-2" />
                 View on Explorer
               </Button>

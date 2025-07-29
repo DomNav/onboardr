@@ -19,83 +19,85 @@ export function TokenCard({ token, className }: TokenCardProps) {
   const isPositive = token.changePercent24h >= 0;
   
   return (
-    <Card className={cn("hover:shadow-md transition-shadow duration-200", className)}>
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold text-lg">{token.symbol}</h3>
+    <Card className={cn("hover:shadow-md transition-shadow duration-200 overflow-hidden", className)}>
+      <CardContent className="p-4 relative">
+        <div className="flex items-start justify-between mb-3 gap-2">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <h3 className="font-semibold text-lg truncate">{token.symbol}</h3>
               {isWatched && (
-                <Badge variant="star" className="px-1.5 py-0.5">
+                <Badge variant="star" className="px-1.5 py-0.5 flex-shrink-0">
                   ★
                 </Badge>
               )}
               <Badge 
                 variant="outline" 
-                className={cn("text-xs px-2 py-0.5", getTokenTypeColor(token.tokenType))}
+                className={cn("text-xs px-2 py-0.5 flex-shrink-0", getTokenTypeColor(token.tokenType))}
               >
                 {token.tokenType}
               </Badge>
             </div>
-            <p className="text-sm text-muted-foreground mb-2">{token.name}</p>
+            <p className="text-sm text-muted-foreground mb-2 truncate">{token.name}</p>
             
             <div className="flex items-center gap-4 mb-3">
-              <div>
-                <div className="text-xl font-bold">{formatPrice(token.price)}</div>
+              <div className="min-w-0">
+                <div className="text-xl font-bold truncate">{formatPrice(token.price)}</div>
                 <div className={cn(
                   "flex items-center text-sm font-medium",
                   isPositive ? "text-green-600" : "text-red-600"
                 )}>
                   {isPositive ? (
-                    <TrendingUp className="h-4 w-4 mr-1" />
+                    <TrendingUp className="h-4 w-4 mr-1 flex-shrink-0" />
                   ) : (
-                    <TrendingDown className="h-4 w-4 mr-1" />
+                    <TrendingDown className="h-4 w-4 mr-1 flex-shrink-0" />
                   )}
-                  {formatPercentage(token.changePercent24h)}
+                  <span className="truncate">{formatPercentage(token.changePercent24h)}</span>
                 </div>
               </div>
               
-              <div className="text-right">
+              <div className="text-right min-w-0">
                 <div className="text-sm text-muted-foreground">Market Cap</div>
-                <div className="font-medium">{formatCurrency(token.marketCap)}</div>
+                <div className="font-medium truncate">{formatCurrency(token.marketCap)}</div>
               </div>
             </div>
             
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                <span>Updated {token.lastUpdated.toLocaleTimeString()}</span>
+              <div className="flex items-center gap-1 min-w-0">
+                <Clock className="h-3 w-3 flex-shrink-0" />
+                <span className="truncate">Updated {token.lastUpdated.toLocaleTimeString()}</span>
               </div>
-              <div className="flex items-center gap-1">
-                <span>Vol: {formatCurrency(token.volume24h)}</span>
+              <div className="flex items-center gap-1 min-w-0">
+                <span className="truncate">Vol: {formatCurrency(token.volume24h)}</span>
               </div>
             </div>
           </div>
           
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="p-1 h-auto"
-                  onClick={() => toggleWatchlistToken(token.symbol)}
-                >
-                  <Star 
-                    className={cn(
-                      "h-5 w-5 transition-colors",
-                      isWatched 
-                        ? "fill-yellow-400 text-yellow-400" 
-                        : "text-muted-foreground hover:text-yellow-400"
-                    )} 
-                  />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{isWatched ? 'Remove from Watchlist' : 'Add to Watchlist'}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div className="flex-shrink-0">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="p-1.5 h-8 w-8"
+                    onClick={() => toggleWatchlistToken(token.symbol)}
+                  >
+                    <Star 
+                      className={cn(
+                        "h-4 w-4 transition-colors",
+                        isWatched 
+                          ? "fill-yellow-400 text-yellow-400" 
+                          : "text-muted-foreground hover:text-yellow-400"
+                      )} 
+                    />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{isWatched ? 'Remove from Watchlist' : 'Add to Watchlist'}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
         
         {/* Sparkline Chart */}

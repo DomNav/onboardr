@@ -5,10 +5,12 @@ import { Sidebar } from './Sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { BarChart3, TrendingDown, TrendingUp, Wallet2, DollarSign, Users } from 'lucide-react';
+import { useFreighter } from '../../hooks/useFreighter';
 
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
+  const { publicKey, isConnected, connect, disconnect } = useFreighter();
   
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prev => !prev);
@@ -21,6 +23,9 @@ export function Dashboard() {
   const handlePortfolioAnalytics = () => {
     navigate('/portfolio'); // Navigate to portfolio page
   };
+
+  // Truncate address for display
+  const truncate = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
   // Mock stats data for demonstration
   const stats = [
@@ -162,8 +167,19 @@ export function Dashboard() {
                     <CardTitle className="gradient-text">Quick Actions</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <Button className="w-full bg-gradient-accent hover:bg-gradient-accent/90 text-white shadow-soroswap-accent">
-                      Connect Wallet
+                    <Button 
+                      className="w-full bg-gradient-accent hover:bg-gradient-accent/90 text-white shadow-soroswap-accent"
+                      onClick={isConnected ? disconnect : connect}
+                      title={isConnected ? `Click to disconnect ${publicKey}` : 'Connect your wallet'}
+                    >
+                      {isConnected && publicKey ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <span>{truncate(publicKey)}</span>
+                          <span className="text-xs opacity-80">• Disconnect</span>
+                        </span>
+                      ) : (
+                        'Connect Wallet'
+                      )}
                     </Button>
                     <Button 
                       variant="outline" 
