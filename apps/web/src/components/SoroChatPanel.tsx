@@ -26,6 +26,14 @@ export default function SoroChatPanel() {
 
     const { cmd, args } = parseCommand(text);
 
+    // --- Local handling for /help command ---
+    if (cmd === 'help') {
+      return push({
+        role: 'ai',
+        text: `Slash commands:\n• /trade <amt> <SELL>→<BUY>\n• /metrics [asset]\n• /help`,
+      });
+    }
+
     // --- Local handling for /trade preview ---
     if (cmd === 'trade') {
       push({ role: 'ai', text: '⏳ Fetching quote…' });
