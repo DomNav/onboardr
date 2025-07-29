@@ -1,9 +1,14 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import parseCommand from '@/lib/parseCommand';
 import { getQuote } from '@/lib/quote';
 
-interface Msg { role: 'user' | 'ai'; text: string }
+interface Msg { 
+  role: 'user' | 'ai'; 
+  text: string;
+  showSignButton?: boolean;
+  onSign?: () => Promise<void>;
+}
 
 export default function SoroChatPanel() {
   const [msgs, setMsgs] = useState<Msg[]>([
@@ -26,10 +31,38 @@ export default function SoroChatPanel() {
       push({ role: 'ai', text: '⏳ Fetching quote…' });
       const quote = await getQuote(args).catch(() => null);
       if (!quote) return push({ role: 'ai', text: '❌ Could not get quote.' });
-      return push({
+      
+      const sign = async () => {
+        if (!('freighterApi' in window)) return alert('Install Freighter ✨');
+        try {
+          // Mock XDR for demo - in real implementation this would come from the quote
+          const mockXdr = 'AAAAAgAAAAB...[mock_transaction]';
+          const txHash = await (window as any).freighterApi.signAndSubmitXDR(mockXdr, 'testnet');
+          push({ role: 'ai', text: `✅ Submitted! https://stellar.expert/explorer/testnet/tx/${txHash}` });
+        } catch (e: any) {
+          push({ role: 'ai', text: `❌ ${e.message}` });
+        }
+      };
+
+      const previewText = `Preview:\n• Sell: ${quote.sell}\n• Buy: ${quote.buy}\n• Fee: ${quote.fee}`;
+      
+      // Add the preview message
+      push({
         role: 'ai',
-        text: `Preview:\n• Sell: ${quote.sell}\n• Buy: ${quote.buy}\n• Fee: ${quote.fee}\n(sign with Freighter)`,
+        text: previewText,
       });
+      
+      // Add a message with the sign button functionality
+      setTimeout(() => {
+        push({
+          role: 'ai', 
+          text: '💎 Ready to sign with Freighter wallet!',
+          showSignButton: true,
+          onSign: sign
+        });
+      }, 100);
+      
+      return;
     }
 
     // --- Everything else goes to MCP ---
@@ -46,9 +79,17 @@ export default function SoroChatPanel() {
     <section className="flex flex-col h-[70vh] border border-purple-700 rounded-lg p-4">
       <div className="flex-1 overflow-y-auto space-y-2 mb-4">
         {msgs.map((m, i) => (
-          <p key={i} className={`p-2 rounded ${m.role === 'ai' ? 'bg-zinc-800' : 'bg-purple-600'}`}>
-            {m.text}
-          </p>
+          <div key={i} className={`p-2 rounded ${m.role === 'ai' ? 'bg-zinc-800' : 'bg-purple-600'}`}>
+            <p className="whitespace-pre-line">{m.text}</p>
+            {m.showSignButton && m.onSign && (
+              <button 
+                onClick={m.onSign}
+                className="mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 rounded transition-colors"
+              >
+                🚀 Sign Transaction
+              </button>
+            )}
+          </div>
         ))}
       </div>
       <div className="flex gap-2">
