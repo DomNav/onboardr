@@ -73,14 +73,45 @@ export default function SoroChatPanel() {
       return;
     }
 
-    // --- Everything else goes to MCP ---
-    const res = await fetch('/api/mcp', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text }),
-    }).then(r => r.json()).catch(() => ({ reply: '⚠️ MCP server not available' }));
+    // --- Everything else goes to MCP with SSE streaming ---
+    if (typeof EventSource !== 'undefined') {
+      try {
+        // First send the message to initiate streaming
+        await fetch('/api/mcp/stream', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text }),
+        });
 
-    push({ role: 'ai', text: res.reply ?? '⚠️ MCP error' });
+        const es = new EventSource('/api/mcp/stream');
+        es.onmessage = e => push({ role: 'ai', text: e.data });
+        es.onerror = () => { 
+          es.close(); 
+          push({ role: 'ai', text: '[stream ended]' }); 
+        };
+        es.addEventListener('open', () => {
+          es.dispatchEvent(new MessageEvent('message', { data: text }));
+        });
+      } catch {
+        // Fallback to regular fetch
+        const res = await fetch('/api/mcp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text }),
+        }).then(r => r.json()).catch(() => ({ reply: '⚠️ MCP server not available' }));
+        
+        push({ role: 'ai', text: res.reply ?? '⚠️ MCP error' });
+      }
+    } else {
+      // Fallback for environments without EventSource
+      const res = await fetch('/api/mcp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text }),
+      }).then(r => r.json()).catch(() => ({ reply: '⚠️ MCP server not available' }));
+      
+      push({ role: 'ai', text: res.reply ?? '⚠️ MCP error' });
+    }
   };
 
   return (
