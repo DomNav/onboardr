@@ -1,0 +1,8 @@
+[submodule "external/soroswap-frontend"]
+	path = external/soroswap-frontend
+	url = https://github.com/soroswap/frontend
+	branch = main
+[submodule "external/soroswap-utility"]
+	path = external/soroswap-utility
+	url = https://github.com/soroswap/utility-contracts
+	branch = main
