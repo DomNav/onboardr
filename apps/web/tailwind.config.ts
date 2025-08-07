@@ -75,6 +75,25 @@ export default {
 					DEFAULT: 'hsl(var(--danger))',
 					foreground: 'hsl(var(--danger-foreground))'
 				},
+				// Soro Metrics specific colors
+				soro: {
+					primary: 'var(--soro-primary)',
+					'accent-end': 'var(--soro-accent-end)',
+					success: 'var(--soro-success)',
+					error: 'var(--soro-error)',
+					surface: 'var(--soro-surface)',
+					highlight: 'var(--soro-highlight)',
+					'border-light': 'var(--soro-border-light)',
+					'border-subtle': 'var(--soro-border-subtle)',
+					'chart-volume': 'var(--soro-chart-volume)',
+					'chart-tvl': 'var(--soro-chart-tvl)',
+					'chart-fees': 'var(--soro-chart-fees)'
+				},
+				// Brand gradient colors for nav pill effect
+				navPill: {
+					from: '#7c3aed', // purple-600
+					to: '#4338ca', // indigo-700
+				},
 			},
 			// Soroswap gradient utilities
 			backgroundImage: {
@@ -207,5 +226,12 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		require('tailwindcss/plugin')(({ addUtilities }: any) => {
+			addUtilities({
+
+			})
+		})
+	],
 } satisfies Config;

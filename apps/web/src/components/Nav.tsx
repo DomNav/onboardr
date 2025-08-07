@@ -1,35 +1,53 @@
 'use client';
-import Link from 'next/link';
-import { useTheme } from 'next-themes';
+import { useWallet } from '@/contexts/WalletContext';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+
+import BalanceDialog from '@/components/BalanceDialog';
+import SegmentedNav from '@/components/SegmentedNav';
+import UserIsland from '@/components/UserIsland';
+import WalletSelectModal from '@/components/wallet/WalletSelectModal';
+import { useProfileStore } from '@/store/profile';
 
 const tabs = [
-  { href: '/balance', label: 'Balance' },
-  { href: '/swap',    label: 'Swap'    },
-  { href: '/pools',   label: 'Pools'   },
-  { href: '/soro',    label: 'Soro AI' },
-  { href: '/info',    label: 'Info'    },
+  { href: 'https://app.soroswap.finance/swap', label: 'Soroswap', external: true },
+  { href: '/soro', label: 'Soro AI' },
+  { href: '/analytics', label: 'Dashboard' },
+  { href: 'https://www.defindex.io/', label: 'Defindex', external: true },
 ];
 
 export default function Nav() {
-  const { theme, setTheme } = useTheme();
+  const { isConnected, isConnecting, disconnect, address, error } = useWallet();
+  const { data: session } = useSession();
+  const { profile } = useProfileStore();
+  const [showWalletModal, setShowWalletModal] = useState(false);
+
+  const formatAddress = (addr: string) => {
+    if (!addr) return '';
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
   
   return (
-    <nav className="flex gap-4 px-6 py-4 bg-gradient-to-r from-purple-600 to-indigo-700 text-white">
-      {tabs.map(t => (
-        <Link
-          key={t.href}
-          href={t.href}
-          className="hover:underline font-medium"
-        >
-          {t.label}
-        </Link>
-      ))}
-      <button 
-        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
-        className="ml-auto px-2 py-1 hover:bg-white/10 rounded transition-colors"
+    <>
+      <nav 
+        className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-purple-600 to-indigo-700 text-white border-b border-border"
+        style={{ '--nav-height': '72px' } as React.CSSProperties}
       >
-        {theme === 'dark' ? '☀️' : '🌙'}
-      </button>
-    </nav>
+        {/* Left side - Navigation tabs */}
+        <SegmentedNav tabs={tabs} />
+        
+        {/* Right side - User island */}
+        <UserIsland />
+      </nav>
+      
+      {/* Balance Dialog */}
+      <BalanceDialog />
+      
+      {/* Wallet Selection Modal */}
+      <WalletSelectModal 
+        isOpen={showWalletModal} 
+        onClose={() => setShowWalletModal(false)} 
+      />
+    </>
   );
 }

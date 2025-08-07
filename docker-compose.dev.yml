@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  # Development web application with hot reload
+  web-dev:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+      target: dev
+      cache_from:
+        - node:20-alpine
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - WATCHPACK_POLLING=true
+      # Development database connection
+      - DATABASE_URL=postgresql://postgres:password@db:5432/onboardr?schema=public
+      - REDIS_URL=redis://redis:6379
+      # Copy your environment variables from .env.local
+      - STELLAR_NETWORK=${STELLAR_NETWORK:-testnet}
+      - PROFILE_NFT_CONTRACT_ADDRESS=${PROFILE_NFT_CONTRACT_ADDRESS}
+      - SPONSOR_SECRET_KEY=${SPONSOR_SECRET_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+    volumes:
+      # Mount source code for hot reload
+      - ./apps/web/src:/app/src:delegated
+      - ./apps/web/public:/app/public:delegated
+      - ./apps/web/next.config.mjs:/app/next.config.mjs:delegated
+      # Prevent node_modules from being overwritten
+      - /app/node_modules
+      - /app/.next
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    networks:
+      - onboardr-network
+    command: npm run dev
+
+  # PostgreSQL database for development
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=onboardr
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./apps/web/src/lib/supabase/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    restart: unless-stopped
+    networks:
+      - onboardr-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and orchestration
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data_dev:/data
+    restart: unless-stopped
+    networks:
+      - onboardr-network
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin for database management (optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_CONFIG_SERVER_MODE=False
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - onboardr-network
+    profiles:
+      - tools
+
+volumes:
+  postgres_data_dev:
+  redis_data_dev:
+
+networks:
+  onboardr-network:
+    driver: bridge

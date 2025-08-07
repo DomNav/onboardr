@@ -4,13 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
+    "dev": "cd apps/web && npm run dev",
+    "build": "cd apps/web && npm run build",
+    "start": "cd apps/web && npm run start",
+    "lint": "cd apps/web && npm run lint",
     "test:defindex": "node --loader ts-node/esm scripts/vault-deposit-withdraw.ts",
     "sanity": "echo 'Sanity check passed ✔️'"
   },
@@ -85,13 +82,10 @@
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
-    "globals": "^15.9.0",
     "jsdom": "^26.1.0",
-    "lovable-tagger": "^1.1.7",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
     "ts-node": "^10.9.1",
-    "tsx": "latest",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",
@@ -99,9 +93,6 @@
   },
   "description": "This is a placeholder README file. Replace this content with your project documentation.",
   "main": "eslint.config.js",
-  "directories": {
-    "doc": "docs"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DomNav/onboardr.git"
