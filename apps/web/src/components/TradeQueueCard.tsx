@@ -5,7 +5,7 @@ import { useTradeStore } from "@/store/trades";
 import { useTransactionStore } from "@/store/transactions";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Crown, Lock, Trash2 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 import { create } from "zustand";
@@ -291,22 +291,25 @@ export const executeSwaps = async (swaps: SwapRequest[]) => {
       }
       
       // Simulate signing phase
-      toast.loading('Signing transaction...');
+      const signingToastId = toast.loading('Signing transaction...');
       txIds.forEach(id => updateTransaction(id, { status: 'signing' }));
       await new Promise(resolve => setTimeout(resolve, 1500));
+      toast.dismiss(signingToastId);
       
       // Simulate broadcasting
-      toast.loading('Broadcasting to network...');
+      const broadcastToastId = toast.loading('Broadcasting to network...');
       txIds.forEach(id => updateTransaction(id, { 
         status: 'broadcasting',
         hash: '0x' + Math.random().toString(16).substr(2, 64)
       }));
       await new Promise(resolve => setTimeout(resolve, 1000));
+      toast.dismiss(broadcastToastId);
       
       // Simulate confirmation
-      toast.loading('Waiting for confirmation...');
+      const confirmToastId = toast.loading('Waiting for confirmation...');
       txIds.forEach(id => updateTransaction(id, { status: 'confirming' }));
       await new Promise(resolve => setTimeout(resolve, 2000));
+      toast.dismiss(confirmToastId);
       
       // Mark as completed
       swaps.forEach(swap => updateSwapStatus(swap.id, 'completed'));
@@ -334,7 +337,7 @@ export const executeSwaps = async (swaps: SwapRequest[]) => {
       throw new Error('Unable to get public key from Freighter wallet.');
     }
 
-    toast.loading(`Building transaction for ${swaps.length} swap${swaps.length > 1 ? 's' : ''}...`);
+    const buildingToastId = toast.loading(`Building transaction for ${swaps.length} swap${swaps.length > 1 ? 's' : ''}...`);
 
     // Transform swaps to prepTrades format
     const trades = swaps.map(swap => ({
@@ -363,7 +366,8 @@ export const executeSwaps = async (swaps: SwapRequest[]) => {
       protocol23Features: features
     });
 
-    toast.loading(`Signing transaction... (${summary.totalOperations} operations)`);
+    toast.dismiss(buildingToastId);
+    const signingToastId = toast.loading(`Signing transaction... (${summary.totalOperations} operations)`);
 
     // Sign and submit XDR with Freighter
     const result = await freighterApi.signAndSubmitXDR(xdr, {
@@ -378,6 +382,7 @@ export const executeSwaps = async (swaps: SwapRequest[]) => {
 
     // Start monitoring the transaction
     if (result.hash) {
+      toast.dismiss(signingToastId);
       toast.success(`📤 Transaction submitted! Monitoring confirmation...`);
       
       try {
@@ -413,6 +418,9 @@ export const executeSwaps = async (swaps: SwapRequest[]) => {
   } catch (error: any) {
     console.error('Swap execution failed:', error);
     
+    // Dismiss any lingering toasts
+    toast.dismiss();
+    
     // Mark all as failed
     swaps.forEach(swap => updateSwapStatus(swap.id, 'failed'));
     
@@ -445,6 +453,14 @@ const TradeQueueCard: React.FC<Props> = ({ className }) => {
   const { tier, features, isKycVerified } = useSubscriptionStore();
   const { addTransaction } = useTransactionStore();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  
+  // Clean up any lingering toasts on unmount
+  useEffect(() => {
+    return () => {
+      // Dismiss all toasts when component unmounts
+      toast.dismiss();
+    };
+  }, []);
   
   // DEBUG: Log swaps to console
   console.log('🔍 TradeQueueCard render - swaps:', swaps);
