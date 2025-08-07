@@ -52,7 +52,7 @@ export default function SoroPage() {
   const router = useRouter();
 
   const { isConnected, address } = useWallet();
-  const { hasProfileNFT, checkOwnership, isCheckingOwnership } = useProfileStore();
+  const { hasProfileNFT, checkOwnership, isCheckingOwnership, hasDismissedMintModal, setHasDismissedMintModal } = useProfileStore();
   const { markRead } = useTradeStore();
 
   // Check Profile NFT ownership when wallet connects
@@ -66,22 +66,24 @@ export default function SoroPage() {
         setWalletJustConnected(false);
       }, 1500);
     } else {
-      // Reset mint success flag when wallet disconnects
+      // Reset flags when wallet disconnects
       setHasMintedSuccessfully(false);
       setWalletJustConnected(false);
+      setHasDismissedMintModal(false); // Reset so modal can show again in new session
     }
-  }, [isConnected, address, checkOwnership]);
+  }, [isConnected, address, checkOwnership, setHasDismissedMintModal]);
 
   // Show mint modal only after wallet has been connected for a moment
+  // AND the user hasn't already dismissed it in this session
   useEffect(() => {
-    if (isConnected && !isCheckingOwnership && !hasProfileNFT && !hasMintedSuccessfully && !walletJustConnected) {
+    if (isConnected && !isCheckingOwnership && !hasProfileNFT && !hasMintedSuccessfully && !walletJustConnected && !hasDismissedMintModal) {
       // Add a small delay after wallet connection before showing the modal
       const timer = setTimeout(() => {
         setShowMintModal(true);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [isConnected, isCheckingOwnership, hasProfileNFT, hasMintedSuccessfully, walletJustConnected]);
+  }, [isConnected, isCheckingOwnership, hasProfileNFT, hasMintedSuccessfully, walletJustConnected, hasDismissedMintModal]);
 
   const handleTradeQuote = (quote: any) => {
     setCurrentQuote(quote);
@@ -242,6 +244,8 @@ export default function SoroPage() {
         isOpen={showMintModal}
         onClose={() => {
           setShowMintModal(false);
+          // Mark that the user has dismissed the modal in this session
+          setHasDismissedMintModal(true);
           // Reset mint success flag when modal is manually closed
           setHasMintedSuccessfully(false);
         }}

@@ -39,6 +39,9 @@ export interface ProfileNFTState {
   // MFA settings
   mfaEnabled: boolean;
   
+  // Session-level flags (not persisted)
+  hasDismissedMintModal: boolean;
+  
   // Actions
   setHasProfileNFT: (hasNFT: boolean) => void;
   setProfileMetadata: (metadata: ProfileMetadata | null) => void;
@@ -52,6 +55,7 @@ export interface ProfileNFTState {
   setError: (error: string | null) => void;
   setApiToken: (token: string | null) => void;
   setMfaEnabled: (enabled: boolean) => void;
+  setHasDismissedMintModal: (dismissed: boolean) => void;
   
   // Computed actions
   checkOwnership: (address: string) => Promise<void>;
@@ -134,6 +138,7 @@ export const useProfileStore = create<ProfileNFTState>()(
       error: null,
       apiToken: null,
       mfaEnabled: false,
+      hasDismissedMintModal: false,
 
       // Basic setters
       setHasProfileNFT: (hasNFT) => set({ hasProfileNFT: hasNFT }),
@@ -148,6 +153,7 @@ export const useProfileStore = create<ProfileNFTState>()(
       setError: (error) => set({ error }),
       setApiToken: (token) => set({ apiToken: token }),
       setMfaEnabled: (enabled) => set({ mfaEnabled: enabled }),
+      setHasDismissedMintModal: (dismissed) => set({ hasDismissedMintModal: dismissed }),
 
       // Check ownership action
       checkOwnership: async (address: string) => {
@@ -227,6 +233,7 @@ export const useProfileStore = create<ProfileNFTState>()(
         error: null,
         apiToken: null,
         mfaEnabled: false,
+        hasDismissedMintModal: false,
       }),
 
       // Reset state
@@ -243,6 +250,7 @@ export const useProfileStore = create<ProfileNFTState>()(
         error: null,
         apiToken: null,
         mfaEnabled: false,
+        hasDismissedMintModal: false,
       }),
     }),
     {

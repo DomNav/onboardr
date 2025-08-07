@@ -17,7 +17,9 @@ export default function SegmentedNav({ tabs }: SegmentedNavProps) {
 
   const isActive = (href: string, external?: boolean) => {
     if (external) return false;
-    return pathname === href;
+    // Exact match OR current path starts with the href (for sub-routes)
+    // Special case: /analytics should match /analytics/* paths
+    return pathname === href || pathname.startsWith(`${href}/`);
   };
 
   return (

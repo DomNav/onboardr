@@ -12,8 +12,7 @@ import { ErrorState } from './ErrorState';
 import { ConsentBanner } from './ConsentBanner';
 import { useAnalyticsPerformance } from '@/hooks/useAnalyticsPerformance';
 import { TimeFrame, Metric } from '@/types/analytics';
-import { FloatingSoroButton } from '@/components/FloatingSoroButton';
-import { SoroSlideOver } from '@/components/SoroSlideOver';
+// FloatingSoroButton and SoroSlideOver are already provided by the global SoroProvider
 
 // Helper components
 const PageHeader = () => (
@@ -110,7 +109,7 @@ const Container: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 export const AnalyticsDashboardPage: React.FC = () => {
   const [timeFrame, setTimeFrame] = useState<TimeFrame>("24h");
   const [metric, setMetric] = useState<Metric>("volume");
-  const [isSoroOpen, setIsSoroOpen] = useState(false);
+  // Soro button is managed globally by SoroProvider
 
   const { data, isLoading, error, mutate } = useDashboardData(timeFrame);
   const performance = useAnalyticsPerformance(timeFrame);
@@ -210,13 +209,6 @@ export const AnalyticsDashboardPage: React.FC = () => {
 
       {/* PIPEDA Consent Banner (Canadian Compliance) */}
       <ConsentBanner />
-
-      {/* Floating Soro Trading Widget */}
-      <FloatingSoroButton onClick={() => setIsSoroOpen(true)} />
-      <SoroSlideOver 
-        isOpen={isSoroOpen} 
-        onClose={() => setIsSoroOpen(false)} 
-      />
     </Container>
   );
 };
